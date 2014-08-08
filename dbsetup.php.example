@@ -1,0 +1,14 @@
+<?php
+// Denne filen trengs for at klaus-systemet skal fungere - må fylles ut med korrekt informasjon og legges som ../include/dbsetup.php (i forhold til index.php)
+// Angi korrekte innstillinger for din database her
+$db_user = "<databasebruker>";
+$db_pass = "<databasepassord>";
+$db_base = "<database>";
+$db_host = "<databaseserver>";
+// Slutt på brukerkonfigurasjon
+
+$db = pg_connect("host=$db_host user=$db_user password=$db_pass dbname=$db_base") or die("Noe gikk galt i tilkobling til databasen: ".pg_last_error());
+
+// Slett innloggingsdetaljer til databasen så ikke folk kan lure ut info...
+unset($db_user, $db_pass, $db_base, $db_host);
+?>

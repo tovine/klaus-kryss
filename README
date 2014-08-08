@@ -1,0 +1,18 @@
+Klaus fondsystem
+================
+Dette er et lettvekts PHP-basert system for enkel håndtering av spleiselag og "kryssing".
+
+Utviklet og vedlikeholdt av Torbjørn Viem Ness, delvis basert på et eldre system skrevet av forskjellige FK-panger.
+
+
+Systemkrav:
+-----------
+* PHP (kun testet på php5, kan være det fungerer - helt eller delvis - på eldre versjoner også, men det tar jeg ikke ansvar for)
+    Derunder også følgende tilegg:
+	- php-postgresqlmodul (php5-pgsql på debian)
+* PostgreSQL-database med skrivetilgang
+* Webserver (testet og utviklet med apache, men fungerer med hvilken som helst webserver som kan kjøre PHP)
+
+Installasjon:
+-------------
+Informasjon kommer senere, jeg holder fortsatt på å forberede dette prosjektet til git...
