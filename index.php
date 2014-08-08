@@ -12,7 +12,7 @@ $result = pg_query($query);
 $row = pg_fetch_array($result);
 ?>
 
-<h3>Klaus Minnefond</h3>
+<h3><?=$klaus_barnavn?></h3>
 <table>
 <tr><th>Barsjef <?=$aar?>:</th><td><?=$row['fornavn']?> "<?=$row['kallenavn']?>" <?=$row['etternavn']?></td></tr>
 <tr><th>Kontonr:</th><td><?=$klaus_kontonr?></td></tr>

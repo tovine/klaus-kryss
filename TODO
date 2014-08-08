@@ -1,0 +1,6 @@
+Ting jeg har lyst til å få gjort:
+=================================
+- Gjøre det mulig å velge hvilke valører som skal være i de forskjellige kolonenne på krysselisten (f.eks. som et array i klaus_inc.php)
+- PDF-system som ikke dør av mystiske årsaker - si fra hvis du er god på LaTeX og har lyst til å hjelpe til!
+- Lage installasjons-script som ser etter og setter opp riktige tabeller og views i databasen så man slipper å gjøre det manuelt.
+- Skrive ny dokumentasjon
