@@ -23,6 +23,7 @@ $row = pg_fetch_array($result);
 <ul>
 <li><a href='saldoer.php'>Sjekk/endre saldoer</a> (kun for barsjef!)</li>
 <li><a href='regkryss.php'>Legg inn liste</a> (kun for barsjef!)</li>
+<li><a href='vareliste.php'>Vareutvalg</a></li>
 <li><a href='liste.php'>Vis/print liste</a></li>
 </ul>
 <?
