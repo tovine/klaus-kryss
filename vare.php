@@ -13,11 +13,12 @@ $vare_strekkode = str_replace("'", "''", $_POST['strekkode']); // Til bruk sener
 // TODO: felt for å skrive inn pris hos polet og flaskestørrelse (evt. bare literpris hos polet) og så få ut forslag til salgspris - basert på innpris/14 for 1L, innpris/11 for 0.7L og innpris/8 for 0.5L, evt. rund opp til nærmeste 5'er
 
 if ($_POST['lagre'] != '') {
-	if (!is_numeric($vare_id)) echo "Feil: vare-id må være numerisk - ingen SQL-injection her...";
+	if ($vare_id && !is_numeric($vare_id)) echo "Feil: vare-id må være numerisk - ingen SQL-injection her...";
 	else {
 		// Oppdater eller legg inn vare
 		if ($vare_slettet != "t") $vare_slettet = "f";
-		if (pg_num_rows(pg_query("SELECT * FROM varer WHERE id = $vare_id"))) $query = "UPDATE varer SET navn = '$vare_navn', kategori = '$vare_kategori', pris = $vare_pris, strekkode = '$vare_strekkode', slettet = '$vare_slettet' WHERE id = $vare_id";
+		
+		if ($vare_id && pg_num_rows(pg_query("SELECT * FROM varer WHERE id = $vare_id"))) $query = "UPDATE varer SET navn = '$vare_navn', kategori = '$vare_kategori', pris = $vare_pris, strekkode = '$vare_strekkode', slettet = '$vare_slettet' WHERE id = $vare_id";
 		else $query = "INSERT INTO varer (navn, kategori, pris, strekkode, slettet) VALUES('$vare_navn', '$vare_kategori', $vare_pris, '$vare_strekkode', '$vare_slettet')";
 		pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 		$message = "<p>Vare lagret</p>";

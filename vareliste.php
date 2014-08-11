@@ -44,7 +44,7 @@ function wipeQuery() {
 <h3>Vareliste (endringer krever barsjef-tilgang)</h3>
 <a href='index.php'>Tilbake</a><br />
 <form action='vareliste.php'>
-<h4>Filtrer søkeresultat</h4>
+<h4>Filtrer søkeresultat (<a href='vare.php'>Legg inn ny vare</a>)</h4>
 Navn: <input type='text' name='sokeord' id='sokefelt' value='<?=$sokeord?>' />
 Kategori: <select name='filter_kategori' onChange='wipeQuery()'>
 <option value=''>Alle</option>
