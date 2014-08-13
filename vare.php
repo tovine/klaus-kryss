@@ -10,8 +10,6 @@ $vare_pris = str_replace("'", "''", $_POST['pris']);
 $vare_slettet = $_POST['slettet'];
 $vare_strekkode = str_replace("'", "''", $_POST['strekkode']); // Til bruk senere, når man bestemmer seg for å eventuelt bruke dette...
 
-// TODO: felt for å skrive inn pris hos polet og flaskestørrelse (evt. bare literpris hos polet) og så få ut forslag til salgspris - basert på innpris/14 for 1L, innpris/11 for 0.7L og innpris/8 for 0.5L, evt. rund opp til nærmeste 5'er
-
 if ($_POST['lagre'] != '') {
 	if ($vare_id && !is_numeric($vare_id)) echo "Feil: vare-id må være numerisk - ingen SQL-injection her...";
 	else {
@@ -39,13 +37,17 @@ if ($vare_id != '') {
 ?>
 
 <script type="text/javascript">
-// TODO: utvid denne funksjonen til å kunne fungere med poløl og andre enheter som bare selges i hele flasker - skal reagere på hvilken kategori den gjeldende varen er
 function calculate() {
 	// Funksjon som beregner prisforslag ut fra formel (break_even = totalpris/svinnkorrigert_antall)
 	if (document.getElementById('pris_inn').value != '') {
-		var storrelsevalg = document.getElementById("flaskestr");
-		var divisor = storrelsevalg.options[storrelsevalg.selectedIndex].value;
-		var kostpris = Math.ceil(eval (document.getElementById('pris_inn').value + "/" + divisor));
+		var kategorivalg = document.getElementById('vare_kategori');
+		if (kategorivalg.options[kategorivalg.selectedIndex].value == 'spirits') {
+			var storrelsevalg = document.getElementById("flaskestr");
+			var divisor = storrelsevalg.options[storrelsevalg.selectedIndex].value;
+			var kostpris = Math.ceil(eval (document.getElementById('pris_inn').value + "/" + divisor));
+		} else {
+			var kostpris = Math.ceil(document.getElementById('pris_inn').value) + <?=$polekstra?>;
+		}
 		document.getElementById('pris_break').value = kostpris;
 		// Runder prisen opp til nærmeste femmer
 		var last_digit = (kostpris % 10);
@@ -68,7 +70,7 @@ function updatePrice() {
 <p><input type='hidden' name='id' value='<?=$vare_id?>' />
 <table>
 <tr><th>Navn:</th><td><input type='text' name='navn' value='<?=$vare_navn?>' /></td></tr>
-<tr><th>Kategori:</th><td><select name='kategori'>
+<tr><th>Kategori:</th><td><select name='kateigori' id='vare_kategori' onChange='calculate()'>
 <?
 // Henter oversikten over alle de forskjellige kategoriene som finnes i databasen
 $kategori_query = "SELECT pg_enum.enumlabel AS varetype
@@ -84,7 +86,7 @@ while ($row = pg_fetch_array($kategori_result)) {
 }
 ?>
 </select></td></tr>
-<tr><th>Pris</th><td><input type='text' id='input_pris' name='pris' size='3' value='<?=$vare_pris?>'/> Utgått? <input type="checkbox" name="slettet" value="t" <? if($vare_slettet == 't') echo "checked "; ?>/></td></tr>
+<tr><th>Pris</th><td><input type='text' id='input_pris' name='pris' size='3' value='<?=$vare_pris?>'/> Utgått/tomt? <input type="checkbox" name="slettet" value="t" <? if($vare_slettet == 't') echo "checked "; ?>/></td></tr>
 </table>
 <input type='submit' name='lagre' value='Lagre vare' />
 </p>
@@ -93,7 +95,7 @@ while ($row = pg_fetch_array($kategori_result)) {
 </div>
 
 <div style="float: left; padding-left: 20px">
-<h4>Beregn prisforslag (foreløpig kun for brennevin o.l.)</h4>
+<h4>Beregn prisforslag</h4>
 <p>Flaskestørrelse: <select id='flaskestr' onChange='calculate()'>
 <?
 foreach ($polfaktor as $storrelse => $faktor) {

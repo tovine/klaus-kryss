@@ -15,8 +15,9 @@ $lister = array(0 => "Aktive", 1 => "Nypang", 2 => "Pang", 3 => "Ukefunk");
 // Dette angir navnene på de forskjellige listetypene (bør ikke endres da de brukes til å linke til riktig CSS-stil
 $listetype = array("Innskudd", "Krysseliste", "BSF");
 
-// Følgende brukes til å sette konstanter til beregning av kostpris for polvarer (deler hele flasken på riktig antall salg før "break even" (medregnet svinn)
+// Følgende brukes til å sette konstanter til beregning av kostpris for polvarer (deler hele flasken på riktig antall salg før "break even" medregnet svinn)
 $polfaktor = array('1.0L' => 14, '0.7L' => 11, '0.5L' => 8);
+$polekstra = 5;	// Påslag for "break even" på ting som selges i enkeltenheter (poløl, brus o.l.)
 
 // Hindre enter i å fucke opp krysseliste-skjema (kommenter ut/slett hvis du ønsker å kunne sende inn skjema med enter)
 ?>
