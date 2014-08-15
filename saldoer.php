@@ -105,7 +105,7 @@ if(is_numeric($bruker)) {
 ?>
 <table>
 <tr><th>Navn:</th><td colspan='2'><? echo $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];?></td><th>Epost:</th><td><?=$row['epost']?></td><th>Telefon:</th><td><?=$row['tlf']?></td></tr>
-<tr><th>Svartegrense:</th><td><input type='text' name='svartegrense' size='3' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /></td><td colspan='3'>Flytt til liste:
+<tr><th>Svartegrense:</th><td><input type='text' name='svartegrense' size='4' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /></td><td colspan='3'>Flytt til liste:
 <select name='nyliste'>
 <?
 foreach ($lister as $liste_index => $liste_navn) {
