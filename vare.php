@@ -70,7 +70,7 @@ function updatePrice() {
 <p><input type='hidden' name='id' value='<?=$vare_id?>' />
 <table>
 <tr><th>Navn:</th><td><input type='text' name='navn' value='<?=$vare_navn?>' /></td></tr>
-<tr><th>Kategori:</th><td><select name='kateigori' id='vare_kategori' onChange='calculate()'>
+<tr><th>Kategori:</th><td><select name='kategori' id='vare_kategori' onChange='calculate()'>
 <?
 // Henter oversikten over alle de forskjellige kategoriene som finnes i databasen
 $kategori_query = "SELECT pg_enum.enumlabel AS varetype
