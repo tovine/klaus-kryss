@@ -12,7 +12,7 @@ $dato = str_replace("'","''",$_REQUEST['dato']) or $dato = date("Y-m-d"); // YYY
 
 <h3>Legg inn ny krysseliste</h3>
 <a href='index.php'>Tilbake</a>
-<form name='krysseliste' action='regkryss.php' method='post'>
+<form name='krysseliste' onSubmit="cleanForm()" action='regkryss.php' method='post'>
 <p>Velg en liste for å registrere nye kryss...</p>
 <select name='liste'>
 <?
@@ -76,6 +76,14 @@ eval(	'document.krysseliste._' + id + '_tot.value = ' +
 	'document.krysseliste._' + id + '_5.value *  5 + ' +
 	'document.krysseliste._' + id + '_1.value *  1' );
 
+}
+function cleanForm() {
+	for(var i=0; i < document.krysseliste.elements.length; i++) {
+		var el = document.krysseliste.elements[i];
+		if(el.type == "text" && /_[0-9]+_/gi.test(el.name) && !(/_tot/gi.test(el.name))) {
+			el.disabled = true;
+		}
+	}
 }
 </script>
 <table>
