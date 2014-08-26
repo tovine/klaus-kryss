@@ -71,7 +71,13 @@ if (pg_num_rows($result)) {
 	if ($sokeord) $filter_args .= "&sokeord=$sokeord";
 	if ($filter_kategori) $filter_args .= "&filter_kategori=$filter_kategori"; 
 	// TODO: mulighet for å sortere andre veien
-	echo "<table><tr><th><a href='vareliste.php?sort=navn$filter_args'>Navn</a></th><th><a href='vareliste.php?sort=kategori$filter_args'>Kategori</a></th><th><a href='vareliste.php?sort=pris$filter_args'>Pris</a></th></tr>";
+	echo "<table><tr><th><a href='vareliste.php?sort=navn";
+	if ($sort_parameter == 'navn') echo "%20desc";
+	echo "$filter_args'>Navn</a></th><th><a href='vareliste.php?sort=kategori";
+	if ($sort_parameter == 'kategori') echo "%20desc";
+	echo "$filter_args'>Kategori</a></th><th><a href='vareliste.php?sort=pris";
+	if ($sort_parameter == 'pris') echo "%20desc";
+	echo "$filter_args'>Pris</a></th></tr>";
 	while ($row = pg_fetch_array($result)) {
 		// Fyll ut tabell med resultat
 ?>
