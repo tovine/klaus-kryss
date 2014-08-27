@@ -25,6 +25,7 @@ $row = pg_fetch_array($result);
 <li><a href='regkryss.php'>Legg inn liste</a> (kun for barsjef!)</li>
 <li><a href='vareliste.php'>Vareutvalg</a></li>
 <li><a href='liste.php'>Vis/print liste</a></li>
+<li><a href='stat.php'>Statistikk</a></li>
 </ul>
 <?
 include '../include/foot.php';
