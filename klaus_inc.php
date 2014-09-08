@@ -8,9 +8,9 @@ $pris_pils = 25;
 $pris_brus = 20;
 
 // Indekseres på samme måte som ellers - aktiv, nypang, pang, ukefunk osv...
-$svartegrenser = array(800, 800, 0, 500);
+$svartegrenser = array(0 => 800, 1 => 800, 2 => 0, 3 => 500, 5 => 0, 6 => 200);
 
-$lister = array(0 => "Aktive", 1 => "Nypang", 2 => "Pang", 3 => "Ukefunk");
+$lister = array(0 => "Aktive", 1 => "Nypang", 2 => "Pang", 3 => "Ukefunk", 5 => "Inndrikking", 6 => "UkefunkPang");
 
 // Dette angir navnene på de forskjellige listetypene (bør ikke endres da de brukes til å linke til riktig CSS-stil
 $listetype = array("Innskudd", "Krysseliste", "BSF");
