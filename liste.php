@@ -11,10 +11,11 @@ function print_list($liste, $link) {
 	global $svartegrenser, $total_saldo, $listenavn;
 	$query = "SELECT id, kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $liste ORDER BY kallenavn ASC";
 	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
-	if (!pg_num_rows($result) && !$link) return;
-	
-	echo "<h4>Saldoliste: $listenavn</h4>
-	<table><tr><th>Kallenavn</th><th>Saldo</th><th>Status</th></tr>";
+	if (!$link) {
+		if (!pg_num_rows($result)) return;
+		echo "<h4>Saldoliste: $listenavn</h4>";
+	}
+	echo "<table><tr><th>Kallenavn</th><th>Saldo</th><th>Status</th></tr>";
 
 	while($row = pg_fetch_array($result)) {
 		if($row['svartegrense'] != 0) $svartegrense = $row['svartegrense'];
