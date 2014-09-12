@@ -65,7 +65,7 @@ while ($row = pg_fetch_array($result)) {
 }
 echo "</select><br />
 <input type='submit' name='velgbruker' value='Velg' /></td><td valign='top'>";
-
+echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 if(is_numeric($bruker)) {
 	if($_POST['nysvartegrense'] == 'OK') {
 		// Sett ny svartegrense
@@ -88,6 +88,7 @@ if(is_numeric($bruker)) {
 			$query = "INSERT INTO klaus VALUES(DEFAULT, $bruker, $type, $belop, '$kommentar', '$dato', DEFAULT)";
 			pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 		} else {
+			// TODO: varsle bruker med alertbox i stedet?
 			echo "Feil: beløp må angis med tall, og kan ikke være tomt eller 0 (litt poengløst å registrere 0kr - ikke sant?)";
 		}
 	}

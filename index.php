@@ -21,6 +21,7 @@ $row = pg_fetch_array($result);
 </table>
 <h4>Funksjoner</h4>
 <ul>
+<li><a href='bruker.php'>Legg inn ny bruker</a> (kun for barsjef!)</li>
 <li><a href='saldoer.php'>Sjekk/endre saldoer</a> (kun for barsjef!)</li>
 <li><a href='regkryss.php'>Legg inn liste</a> (kun for barsjef!)</li>
 <li><a href='vareliste.php'>Vareutvalg</a></li>
