@@ -5,12 +5,12 @@ include 'klaus_inc.php';
 
 $bruker = $_REQUEST['bruker'];
 
-// TODO: implementer lagring
 $kallenavn = str_replace("'","''",$_POST['kallenavn']);
 $fornavn = str_replace("'","''",$_POST['fornavn']);
 $etternavn = str_replace("'","''",$_POST['etternavn']);
 $epost = str_replace("'","''",$_POST['epost']);
 $kull = $_POST['kull'];
+if(!$kull) $kull = date('Y');
 $liste = $_POST['liste'];
 $svartegrense = $_POST['svartegrense'];
 $aktiv = $_POST['aktiv'];
@@ -60,7 +60,7 @@ if(is_numeric($bruker)) {
 <tr><th>Kallenavn:</th><td><input type='text' name='kallenavn' value='<?=$kallenavn?>' /></td></tr>
 <tr><th>Fornavn:</th><td><input type='text' name='fornavn' value='<?=$fornavn?>' /></td></tr>
 <tr><th>Etternavn:</th><td><input type='text' name='etternavn' value='<?=$etternavn?>' /></td></tr>
-<tr><th>Kull:</th><td><input type='text' name='kull' value='<?=$kull?>' /></td></tr>
+<tr><th>Kull:</th><td><input type='number' name='kull' value='<?=$kull?>' /></td></tr>
 <tr><th>Liste:</th><td><select name='liste'>
 <?
 foreach ($lister as $liste_index => $liste_navn) {

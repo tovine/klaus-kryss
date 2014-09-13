@@ -8,7 +8,7 @@ $pris_pils = 25;
 $pris_brus = 20;
 
 // Indekseres på samme måte som ellers - aktiv, nypang, pang, ukefunk osv...
-$svartegrenser = array(0 => 800, 1 => 800, 2 => 0, 3 => 500, 5 => 0, 6 => 200);
+$svartegrenser = array(0 => 800, 1 => 800, 2 => 0, 3 => 500, 5 => 0, 6 => 0);
 
 $lister = array(0 => "Aktive", 1 => "Nypang", 2 => "Pang", 3 => "Ukefunk", 5 => "Inndrikking", 6 => "UkefunkPang");
 

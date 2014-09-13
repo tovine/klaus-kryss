@@ -65,8 +65,8 @@ while ($row = pg_fetch_array($result)) {
 }
 echo "</select><br />
 <input type='submit' name='velgbruker' value='Velg' /></td><td valign='top'>";
-echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 if(is_numeric($bruker)) {
+echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 	if($_POST['nysvartegrense'] == 'OK') {
 		// Sett ny svartegrense
 		$svartegrense = $_POST['svartegrense'];
