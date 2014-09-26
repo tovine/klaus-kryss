@@ -67,9 +67,10 @@ echo "</select><br />
 <input type='submit' name='velgbruker' value='Velg' /></td><td valign='top'>";
 if(is_numeric($bruker)) {
 echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
-	if($_POST['nysvartegrense'] == 'OK') {
+	if($_POST['nysvartegrense']) {
 		// Sett ny svartegrense
 		$svartegrense = $_POST['svartegrense'];
+		if($_POST['nysvartegrense'] == "Slett") $svartegrense = 0;
 		if(!is_numeric($svartegrense)) echo "Svartegrense må bestå av tall...";
 		else {
 			$query = "UPDATE personer SET svartegrense = $svartegrense WHERE id = $bruker";
@@ -104,9 +105,10 @@ echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	$saldo = pg_fetch_array($result)['saldo'];
 ?>
+
 <table>
 <tr><th>Navn:</th><td colspan='2'><? echo $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];?></td><th>Epost:</th><td><?=$row['epost']?></td><th>Telefon:</th><td><?=$row['tlf']?></td></tr>
-<tr><th>Svartegrense:</th><td><input type='text' name='svartegrense' size='4' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /></td><td colspan='3'>Flytt til liste:
+<tr><th>Svartegrense:</th><td><input type='text' name='svartegrense' size='4' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /><input type='submit' name='nysvartegrense' value='Slett' /></td><td colspan='3'>Flytt til liste:
 <select name='nyliste'>
 <?
 foreach ($lister as $liste_index => $liste_navn) {
