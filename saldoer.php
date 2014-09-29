@@ -23,6 +23,10 @@ text-align:right;
 background-color:#CC99FF;
 text-align:right;
 }
+.infocol {
+padding-left: 4px;
+white-space: nowrap;
+}
 </style>
 
 <h3>Vis/oppdater saldoer</h3>
@@ -107,8 +111,9 @@ echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 ?>
 
 <table>
-<tr><th>Navn:</th><td colspan='2'><? echo $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];?></td><th>Epost:</th><td><?=$row['epost']?></td><th>Telefon:</th><td><?=$row['tlf']?></td></tr>
-<tr><th>Svartegrense:</th><td><input type='text' name='svartegrense' size='4' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /><input type='submit' name='nysvartegrense' value='Slett' /></td><td colspan='3'>Flytt til liste:
+<tr><th>Navn:</th><th>Epost:</th><th>Telefon:</th><th>Svartegrense:</th></tr>
+<tr><td class='infocol'><? echo $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];?></td><td class='infocol'><?=$row['epost']?></td><td class='infocol'><?=$row['tlf']?></td><td class='infocol'><input type='text' name='svartegrense' size='4' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /><input type='submit' name='nysvartegrense' value='Slett' /></td></tr>
+<tr><th colspan='3'>Flytt til liste:
 <select name='nyliste'>
 <?
 foreach ($lister as $liste_index => $liste_navn) {
@@ -118,14 +123,14 @@ foreach ($lister as $liste_index => $liste_navn) {
 }
 ?>
 </select><input type='submit' name='flyttbruker' value='Flytt' />
-</td></tr>
+</th></tr>
 <tr><th>Sum: <input type='text' name='regbelop' size='4' placeholder='Beløp' /></th><th colspan='2'>Type:<select name='type'>
 <?
 foreach ($listetype as $listetype_index => $listetype_navn) {
 	echo "<option value='$listetype_index'>$listetype_navn</option>";
 }
 ?>
-</select></th><td colspan='2'><input type='text' name='kommentar' placeholder='Kommentar' /></td><td colspan='2'><input type='date' name='dato' size='8' value='<?=$dato?>' /></td><td><input type='submit' name='registrer' value='Legg inn' /></td>
+</select></th><td colspan='2'><input type='text' name='kommentar' placeholder='Kommentar' /></td><td><input type='date' name='dato' size='8' value='<?=$dato?>' /></td><td><input type='submit' name='registrer' value='Legg inn' /></td>
 </tr></table>
 <table width='100%'>
 <tr><th>Saldo:</th><td><?=$saldo?></td></tr>
