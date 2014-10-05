@@ -28,6 +28,7 @@ if($_POST['lagrebruker']) {
 			$query = "INSERT INTO personer (kallenavn, fornavn, etternavn, epost, kull, liste, svartegrense, aktiv, slettet, tlf) VALUES ('$kallenavn', '$fornavn', '$etternavn', '$epost', $kull, $liste, $svartegrense, '$aktiv', '$slettet', '$tlf')";
 		}
 		if(!pg_query($query)) echo "<span style='color: red'>Ikke lagret - noe gikk galt: ".pg_last_error()."</span><br />";
+		else $lagret = true;
 	} else echo "<span style='color: red'>Ikke lagret: feil i input</span><br />";
 }
 if(is_numeric($bruker)) {
@@ -80,5 +81,7 @@ foreach ($lister as $liste_index => $liste_navn) {
 </form>
 
 <?
+if ($lagret) echo "<p>Bruker ble lagret...</p>";
+
 include '../include/foot.php';
 ?>

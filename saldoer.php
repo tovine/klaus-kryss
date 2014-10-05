@@ -79,6 +79,7 @@ echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 		else {
 			$query = "UPDATE personer SET svartegrense = $svartegrense WHERE id = $bruker";
 			pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+			echo "<p>Ny svartegrense ble satt</p>";
 		}
 	} else if($_POST['registrer'] == "Legg inn") {
 		// Registrer transaksjon

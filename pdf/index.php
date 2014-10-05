@@ -114,6 +114,8 @@ if ($nopdf) {
 	echo $header;
 	echo $body;
 } else {
+	$pdf->SetTitle($lister[$liste].date('-ymd'));
+	$pdf->SetCreator($_SERVER['PHP_AUTH_USER']); //TODO: må endre måten brukernavn hentes når ting migreres tilbake til Samfundet og annen login...
 	$pdf->setAutoTopMargin = 'stretch';
 	$pdf->setAutoBottomMargin = 'stretch';
 	$pdf->keep_table_proportions = true;
