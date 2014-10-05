@@ -10,7 +10,7 @@ Systemkrav:
 * PHP (kun testet på php5, kan være det fungerer - helt eller delvis - på eldre versjoner også, men det tar jeg ikke ansvar for)
     Derunder også følgende tilegg:
 	- php-postgresqlmodul (php5-pgsql på debian)
-* PostgreSQL-database med skrivetilgang
+* PostgreSQL-database med lese- og skrivetilgang
 * Webserver (testet og utviklet med apache, men fungerer med hvilken som helst webserver som kan kjøre PHP)
 
 Installasjon:
@@ -22,3 +22,5 @@ PDF-utskrift:
 For utskrift av PDF-lister forventer systemet å finne php-skript på 'pdf/index.php', og sender en GET-header med nummeret til den listen som skal skrives ut - det er opp til deg å lage den biten som faktisk lager PDF-listen.
 
 Hvis du lager en god løsning for å gjøre det hadde det vært utrolig kult om du delte den med meg så kan jeg inkludere den i prosjektet (har for tiden ikke kapasitet til å bruke så mye tid på det selv)...
+
+I mappen pdf finnes et eksempel på hvordan det kan gjøres, den benytter PHP-biblioteket mPFD (http://www.mpdf1.com)
