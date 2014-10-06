@@ -12,6 +12,10 @@ $svartegrenser = array(0 => 800, 1 => 800, 2 => 0, 3 => 500, 5 => 0, 6 => 0);
 
 $lister = array(0 => "Aktive", 1 => "Nypang", 2 => "Pang", 3 => "Ukefunk", 5 => "Inndrikking", 6 => "UkefunkPang");
 
+// Angir bredde på kolonnene (i px) for PDF-lista
+$col_hdrs = array('Pils' => '300','Brus' => '50','50kr' => '80','20kr' => '100','10kr' => '40','5kr' => '40','1kr' => '40');
+$col_pris = array('Pils' => $pris_pils,'Brus' => $pris_brus,'50kr' => '50','20kr' => '20','10kr' => '10','5kr' => '5','1kr' => '1');
+
 // Dette angir navnene på de forskjellige listetypene (bør ikke endres da de brukes til å linke til riktig CSS-stil
 $listetype = array("Innskudd", "Krysseliste", "BSF");
 

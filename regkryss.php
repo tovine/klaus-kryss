@@ -24,7 +24,7 @@ foreach ($lister as $liste_index => $liste_navn) {
 ?>
 </select>
 <input name='velgliste' type='submit' value='Velg' />
-Listedato: <input name='dato' type='date' value="<?=$dato?>" />
+Listedato: <input name='dato' type='date' value="<? echo $dato?>" />
 
 <?
 if(is_numeric($liste)) {
@@ -67,15 +67,14 @@ if(is_numeric($liste)) {
 ?>
 <script type="text/javascript">
 function summer(id) {
-eval(	'document.krysseliste._' + id + '_tot.value = ' +
-	'document.krysseliste._' + id + '_pils.value * <?=$pris_pils?> + ' +
-	'document.krysseliste._' + id + '_brus.value * <?=$pris_brus?> + ' +
-	'document.krysseliste._' + id + '_50.value * 50 + ' +
-	'document.krysseliste._' + id + '_20.value * 20 + ' +
-	'document.krysseliste._' + id + '_10.value * 10 + ' +
-	'document.krysseliste._' + id + '_5.value *  5 + ' +
-	'document.krysseliste._' + id + '_1.value *  1' );
-
+<?
+	echo "eval(	'document.krysseliste._' + id + '_tot.value = '";
+	foreach ($col_pris as $felt => $verdi) {
+		// Generer javascript for å summere verdiene
+		echo " +\n'document.krysseliste._' + id + '_$felt.value * $verdi + '";
+	}
+	echo "+ '0');\n"; // Workaround for at javascript ikke skal bli furten...
+?>
 }
 function cleanForm() {
 	for(var i=0; i < document.krysseliste.elements.length; i++) {
@@ -87,20 +86,21 @@ function cleanForm() {
 }
 </script>
 <table>
-<tr><th>Kallenavn</th><th>Pils</th><th>Brus</th><th>50kr</th><th>20kr</th><th>10kr</th><th>5kr</th><th>1kr</th><th>Sum</th></tr>
+<tr><th>Kallenavn</th>
 <?
+	foreach ($col_hdrs as $hdr_title => $derp) {
+		echo "<th>$hdr_title</th>";
+	}
+	echo "<th>Sum</th></tr>";
 	while($row = pg_fetch_array($result)) {
-		$nick = $row['kallenavn'];?>
-<tr><td><?=$nick?></td>
-<td><input name='_<?=$row['id']?>_pils' type='text' size='2' onchange="summer(<?=$row['id']?>)" /></td>
-<td><input name='_<?=$row['id']?>_brus' type='text' size='2' onchange="summer(<?=$row['id']?>)" /></td>
-<td><input name='_<?=$row['id']?>_50' type='text' size='2' onchange="summer(<?=$row['id']?>)" /></td>
-<td><input name='_<?=$row['id']?>_20' type='text' size='2' onchange="summer(<?=$row['id']?>)" /></td>
-<td><input name='_<?=$row['id']?>_10' type='text' size='2' onchange="summer(<?=$row['id']?>)" /></td>
-<td><input name='_<?=$row['id']?>_5' type='text' size='2' onchange="summer(<?=$row['id']?>)" /></td>
-<td><input name='_<?=$row['id']?>_1' type='text' size='2' onchange="summer(<?=$row['id']?>)" /></td>
-<td><input name='_<?=$row['id']?>_tot' type='text' size='3' readonly /></td></tr>
-<?	}
+		$nick = $row['kallenavn'];
+		echo "<tr><td>$nick</td>";
+
+		foreach ($col_hdrs as $col => $width) {
+			echo "<td><input name='_".$row['id']."_".$col."' type='text' size='2' onchange='summer(".$row['id'].")' /></td>";
+		}
+		echo "<td><input name='_".$row['id']."_tot' type='text' size='3' readonly /></td></tr>";
+	}
 
 	echo "</table><br />
 	Kommentar til listen: <input type='text' name='kommentar' /><br /><br />

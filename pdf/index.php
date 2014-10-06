@@ -73,13 +73,13 @@ Kontonummer: $klaus_kontonr
 }
 
 //$col_hdrs = array('Navn' => '1%','Pils' => '40%','Brus' => '10%','50' => '10%','20' => '16%','10' => '7%','5' => '7%','1' => '7%');
-$col_hdrs = array('Navn' => '10','Pils' => '300','Brus' => '50','50' => '80','20' => '100','10' => '40','5' => '40','1' => '40');
 
 $body = "<table class='krysseliste'><thead><tr>";
 //$body = "<table class='krysseliste'><thead><td colspan='".sizeof($col_hdrs)."'>$header</td><tr>";
 
+$body .= "<th style='width: 10;'>&nbsp;Navn</th>";
 foreach ($col_hdrs as $hdr => $width) {
-	$body .= "<th style='width: $width;'>&nbsp;$hdr</th>";
+	$body .= "<th style='width: $width;'>&nbsp;$hdr&nbsp;</th>";
 }
 $body .= "</tr></thead>";
 
@@ -99,7 +99,7 @@ while ($row = pg_fetch_array($result)) {
 		$body .= "<tr class='hvit'>";
 	//	$farge = 1;
 	$body .= "<td style='background: white'>&nbsp;$nick</td>";
-	for ($i = 0;$i < sizeof($col_hdrs)-1;$i++) $body .= "<td></td>";
+	for ($i = 0;$i < sizeof($col_hdrs);$i++) $body .= "<td></td>";
 
 	$body .= "</tr>";
 }
