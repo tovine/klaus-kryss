@@ -5,6 +5,7 @@ include 'klaus_inc.php';
 
 $liste = $_REQUEST['liste'];
 $bruker = $_REQUEST['bruker'];
+if(!is_numeric($bruker)) die('Feil: bruker må være numerisk!');
 if(!is_numeric($liste)) $liste = 0;
 
 $dato = date("Y-m-d");

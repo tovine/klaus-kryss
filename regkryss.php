@@ -39,7 +39,7 @@ if(is_numeric($liste)) {
 		$insert_result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 		while($row = pg_fetch_array($insert_result)) {
 			$sum = $_POST['_'.$row['id'].'_tot'];
-			if($sum && ($sum != 0)) {
+			if($sum && is_numeric($sum) && ($sum != 0)) {
 				// Klargjør data for å legge inn i databasen
 				$summer[$row['id']] = -$sum;
 				// Link navn med id for bruk i "resultatet"
@@ -51,10 +51,10 @@ if(is_numeric($liste)) {
 		// type 1 er FK-liste (2 er BSF og 0 er innskudd)
 		$kommentar = str_replace("'","''",$_POST['kommentar']);	// SQL injection-beskyttelse
 
-		$statement = pg_prepare("","INSERT INTO klaus (bruker, type, belop, dato, kommentar) VALUES($1, 1, $2, '$dato', '$kommentar')") or die("Mislyktes i å opprette query, prøv igjen...<br />Debug-info: ".pg_last_error());
+		$statement = pg_prepare("insert_transaction","INSERT INTO klaus (bruker, type, belop, dato, kommentar) VALUES($1, 1, $2, '$dato', '$kommentar')") or die("Mislyktes i å opprette query, prøv igjen...<br />Debug-info: ".pg_last_error());
 		echo "<p>Siste listeregistrering:<br />----------------------------";
 		foreach($summer as $id => $belop) {
-			if(pg_execute("",array($id,$belop))) {
+			if(pg_execute("insert_transaction",array($id,$belop))) {
 				echo "<br />Registrerte $belop,- på ".$navn[$id];
 			} else {
 				// Gi beskjed om at noe gikk galt og skriv ut feilmelding

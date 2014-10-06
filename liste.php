@@ -9,6 +9,7 @@ if(!is_numeric($liste)) $liste = 0;
 
 function print_list($liste, $link) {
 	global $svartegrenser, $total_saldo, $listenavn;
+	if(!is_numeric($liste)) die('NEI! Listenummer må være numerisk, ikke prøv å injisere dritt...');
 	$query = "SELECT id, kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $liste ORDER BY kallenavn ASC";
 	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	if (!$link) {
