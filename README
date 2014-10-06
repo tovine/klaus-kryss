@@ -15,7 +15,20 @@ Systemkrav:
 
 Installasjon:
 -------------
-Informasjon kommer senere, jeg holder fortsatt på å forberede dette prosjektet til git...
+*Klon git-repoet (eventuelt last ned som zip, men da mister man muligheten for å automatisk oppdatere det med 'git pull' når det kommer nye endringer...) til webserveren du skal bruke.
+*Opprett database og tilhørende bruker som har lese- og skrivetilgang
+	F.eks:
+	-Logg inn som postgres-brukeren (su->su postgres)
+	-Åpne postgresq: psql
+	-Skriv inn følgende SQL-kommandoer:
+		>CREATE DATABASE [databasenavn her];
+		>ALTER DATABASE [databasenavn her] OWNER TO [databasebruker her];
+*Sett opp databaseinnstillinger:
+	-Kopier dbsetup.php.example til ../include/dbsetup.php (relativt til mappen du lastet ned i
+	-Rediger dbsetup.php med riktige tilkoblingsinnstillinger
+*Kjør installasjonsskript for å sette opp databasen riktig: php setup.php
+*Konfigurer klaus_inc.php
+(*Sett opp sikkerhet/passordbeskyttelse)
 
 PDF-utskrift:
 -------------
