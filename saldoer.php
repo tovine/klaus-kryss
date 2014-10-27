@@ -126,13 +126,15 @@ foreach ($lister as $liste_index => $liste_navn) {
 ?>
 </select><input type='submit' name='flyttbruker' value='Flytt' />
 </th></tr>
-<tr><th>Sum: <input type='text' name='regbelop' size='4' placeholder='Beløp' /></th><th colspan='2'>Type:<select name='type'>
+<tr><th colspan='5'>Sum: <input type='text' name='regbelop' size='4' placeholder='Beløp' /> Type:<select name='type'>
+<!--<tr><th>Sum: <input type='text' name='regbelop' size='4' placeholder='Beløp' /></th><th colspan='2'>Type:<select name='type'>-->
 <?
 foreach ($listetype as $listetype_index => $listetype_navn) {
 	echo "<option value='$listetype_index'>$listetype_navn</option>";
 }
 ?>
-</select></th><td colspan='2'><input type='text' name='kommentar' placeholder='Kommentar' /></td><td><input type='date' name='dato' size='8' value='<?=$dato?>' /></td><td><input type='submit' name='registrer' value='Legg inn' /></td>
+<!--</select></th><td colspan='2'><input type='text' name='kommentar' placeholder='Kommentar' /></td><td><input type='date' name='dato' size='8' value='<?=$dato?>' /></td><td><input type='submit' name='registrer' value='Legg inn' /></td>-->
+</select> <input type='text' name='kommentar' placeholder='Kommentar' /> <input type='date' name='dato' size='8' value='<?=$dato?>' /><input type='submit' name='registrer' value='Legg inn' /></th>
 </tr></table>
 <table width='100%'>
 <tr><th>Saldo:</th><td><?=$saldo?></td></tr>
