@@ -3,6 +3,7 @@ include '../include/top.php';
 include '../include/dbsetup.php'; // Setter opp tilkobling mot postgresql-database, så man bare kan bruke pg_query() direkte.
 include 'klaus_inc.php';
 
+// Hvis liste er -1 betyr det 'alle', og systemet går inn i BSF-modus...
 $liste = $_REQUEST['liste'];
 if (!is_numeric($liste)) $liste = 0;
 
@@ -22,6 +23,7 @@ foreach ($lister as $liste_index => $liste_navn) {
 	echo ">$liste_navn</option>";
 }
 ?>
+<option value='-1'<?if ($liste == -1) echo " selected"?>>Alle (BSF)</option>
 </select>
 <input name='velgliste' type='submit' value='Velg' />
 Listedato: <input name='dato' type='date' value="<? echo $dato?>" />
@@ -29,13 +31,15 @@ Listedato: <input name='dato' type='date' value="<? echo $dato?>" />
 <?
 if(is_numeric($liste)) {
 	echo "Valgt krysseliste: ".$lister[$liste];
-	$query = "SELECT * FROM personer WHERE liste = $liste AND slettet = FALSE ORDER BY kallenavn";
+	if ($liste == -1) $query = "SELECT * FROM personer WHERE slettet = FALSE ORDER BY kallenavn";
+	else $query = "SELECT * FROM personer WHERE liste = $liste AND slettet = FALSE ORDER BY kallenavn";
 	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 
 	if($_POST['legginnliste']) {
 		$summer = array();
 		$navn = array();
-		$query = "SELECT id, kallenavn FROM personer WHERE liste = $liste AND slettet = FALSE ORDER BY kallenavn";
+		if ($liste == -1) $query = "SELECT id, kallenavn FROM personer WHERE slettet = FALSE ORDER BY kallenavn";
+		else $query = "SELECT id, kallenavn FROM personer WHERE liste = $liste AND slettet = FALSE ORDER BY kallenavn";
 		$insert_result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 		while($row = pg_fetch_array($insert_result)) {
 			$sum = $_POST['_'.$row['id'].'_tot'];
@@ -51,16 +55,20 @@ if(is_numeric($liste)) {
 		// type 1 er FK-liste (2 er BSF og 0 er innskudd)
 		$kommentar = str_replace("'","''",$_POST['kommentar']);	// SQL injection-beskyttelse
 
-		$statement = pg_prepare("insert_transaction","INSERT INTO klaus (bruker, type, belop, dato, kommentar) VALUES($1, 1, $2, '$dato', '$kommentar')") or die("Mislyktes i å opprette query, prøv igjen...<br />Debug-info: ".pg_last_error());
+		if ($liste == -1) $statement = pg_prepare("insert_transaction","INSERT INTO klaus (bruker, type, belop, dato, kommentar) VALUES($1, 2, $2, '$dato', '$kommentar')") or die("Mislyktes i å opprette query, prøv igjen...<br />Debug-info: ".pg_last_error());
+		else $statement = pg_prepare("insert_transaction","INSERT INTO klaus (bruker, type, belop, dato, kommentar) VALUES($1, 1, $2, '$dato', '$kommentar')") or die("Mislyktes i å opprette query, prøv igjen...<br />Debug-info: ".pg_last_error());
 		echo "<p>Siste listeregistrering:<br />----------------------------";
+		$totalsum = 0;
 		foreach($summer as $id => $belop) {
 			if(pg_execute("insert_transaction",array($id,$belop))) {
 				echo "<br />Registrerte $belop,- på ".$navn[$id];
+				$totalsum += $belop;
 			} else {
 				// Gi beskjed om at noe gikk galt og skriv ut feilmelding
 				echo "<br />Noe gikk galt under registreringen av $belop,- på ".$navn[$id].": ".pg_last_error();
 			}
 		}
+		echo "<br />----------------------------<br /><b>Totalt registrert: kr.$totalsum,-</b>";
 		if ($kommentar != '') echo "<br />----------------------------<br />Listekommentar: $kommentar";
 		echo "</p>";
 	}
