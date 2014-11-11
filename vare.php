@@ -12,7 +12,7 @@ $vare_strekkode = str_replace("'", "''", $_POST['strekkode']); // Til bruk sener
 
 if ($_POST['lagre'] != '') {
 	if ($vare_id && !is_numeric($vare_id)) echo "Feil: vare-id må være numerisk - ingen SQL-injection her...";
-	else {
+	else if ($vare_navn && $vare_navn != '' && is_numeric($vare_pris)) {
 		// Oppdater eller legg inn vare
 		if ($vare_slettet != "t") $vare_slettet = "f";
 		
@@ -20,7 +20,7 @@ if ($_POST['lagre'] != '') {
 		else $query = "INSERT INTO varer (navn, kategori, pris, strekkode, slettet) VALUES('$vare_navn', '$vare_kategori', $vare_pris, '$vare_strekkode', '$vare_slettet')";
 		pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 		$message = "<p>Vare lagret</p>";
-	}
+	} else $message = "<p>Feil i input: du må fylle inn alle feltene for å lagre...</p>";
 }
 
 if ($vare_id != '') {
