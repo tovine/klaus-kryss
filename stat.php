@@ -74,14 +74,17 @@ function listeVer($res, $del) {
 	$max = 0;
 	$f = 0;
 	while ($row = pg_fetch_array($res)) {
+		$months[$row[0]] = $row[1];
+		if ($row[1] > $max) $max = $row[1];
+	}
+	foreach ($months as $month => $total) {
 		$r = 200;
 		$g = 200*$f;
 		$b = 200*$f;
-		$graph .= "<div style=\"width:60px;height:".(round($row[1]/$del)+3).
-		"px;top:".(620-round($row[1]/$del))."px;float:left;position:relative;background-color:rgb(".$r.",".$g.",".$b.")\"><div style=\"position:absolute;bottom:5px\">".$row[0].": ".$row[1]."</div></div>\n";
+		$graph .= "<div style=\"width:60px;height:".(round($total/$del)+3).
+		"px;top:".($max/$del-round($total/$del))."px;float:left;position:relative;background-color:rgb(".$r.",".$g.",".$b.")\"><div style=\"position:absolute;bottom:5px\">$month: $total</div></div>\n";
 		if ($f == 1) $f = 0;
 		else $f = 1;
-		if ($row[1] > $max) $max = $row[1];
 	}
 	$height = $max/$del;
 	echo "<div style=\"height:".$height."px;margin:15px\">$graph</div>";
