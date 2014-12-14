@@ -16,17 +16,18 @@ if ($_POST['lagre'] != '') {
 		// Oppdater eller legg inn vare
 		if ($vare_slettet != "t") $vare_slettet = "f";
 		
-		if ($vare_id && pg_num_rows(pg_query("SELECT * FROM varer WHERE id = $vare_id"))) $query = "UPDATE varer SET navn = '$vare_navn', kategori = '$vare_kategori', pris = $vare_pris, strekkode = '$vare_strekkode', slettet = '$vare_slettet' WHERE id = $vare_id";
-		else $query = "INSERT INTO varer (navn, kategori, pris, strekkode, slettet) VALUES('$vare_navn', '$vare_kategori', $vare_pris, '$vare_strekkode', '$vare_slettet')";
-		pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+		if ($vare_id && pg_num_rows(pg_query_params("SELECT * FROM varer WHERE id = $1", array($vare_id)))) $result = pg_query_params("UPDATE varer SET navn = $1, kategori = $2, pris = $3, strekkode = $4, slettet = $5 WHERE id = $6", array($vare_navn, $vare_kategori, $vare_pris, $vare_strekkode, $vare_slettet, $vare_id));
+		else $result = pg_query_params("INSERT INTO varer (navn, kategori, pris, strekkode, slettet) VALUES($1, $2, $3, $4, $5)", array($vare_navn, $vare_kategori, $vare_pris, $vare_strekkode, $vare_slettet));
+		if(!$result) die('Noe gikk galt: '.pg_last_error());
 		$message = "<p>Vare lagret</p>";
 	} else $message = "<p>Feil i input: du må fylle inn alle feltene for å lagre...</p>";
 }
 
 if ($vare_id != '') {
 	// Henter vare med den ID'en
-	$query = "SELECT * FROM varer WHERE id = $vare_id";
-	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+//	$query = "SELECT * FROM varer WHERE id = $vare_id";
+	$result = pg_query_params("SELECT * FROM varer WHERE id = $1", array($vare_id));
+//	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	$row = pg_fetch_array($result) or die('Noe gikk galt: '.pg_last_error());
 	$vare_navn = $row['navn'];
 	$vare_kategori = $row['kategori'];

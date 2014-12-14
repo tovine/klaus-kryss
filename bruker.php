@@ -23,19 +23,23 @@ if($_POST['lagrebruker']) {
 		if ($aktiv != 't') $aktiv = 'f';
 		if ($slettet != 't') $slettet ='f';
 		if (is_numeric($bruker)) {
-			$query = "UPDATE personer SET kallenavn = '$kallenavn', fornavn = '$fornavn', etternavn = '$etternavn', epost = '$epost', kull = $kull, liste = $liste, svartegrense = $svartegrense, aktiv = '$aktiv', slettet = '$slettet', tlf = '$tlf' WHERE id = $bruker";
+//			$query = "UPDATE personer SET kallenavn = '$kallenavn', fornavn = '$fornavn', etternavn = '$etternavn', epost = '$epost', kull = $kull, liste = $liste, svartegrense = $svartegrense, aktiv = '$aktiv', slettet = '$slettet', tlf = '$tlf' WHERE id = $bruker";
+			$result = pg_query_params("UPDATE personer SET kallenavn = $1, fornavn = $2, etternavn = $3, epost = $4, kull = $5, liste = $6, svartegrense = $7, aktiv = $8, slettet = $9, tlf = $10 WHERE id = $11", array($kallenavn, $fornavn, $etternavn, $epost, $kull, $liste, $svartegrense, $aktiv, $slettet, $tlf, $bruker));
 		} else {
-			$query = "INSERT INTO personer (kallenavn, fornavn, etternavn, epost, kull, liste, svartegrense, aktiv, slettet, tlf) VALUES ('$kallenavn', '$fornavn', '$etternavn', '$epost', $kull, $liste, $svartegrense, '$aktiv', '$slettet', '$tlf')";
+//			$query = "INSERT INTO personer (kallenavn, fornavn, etternavn, epost, kull, liste, svartegrense, aktiv, slettet, tlf) VALUES ('$kallenavn', '$fornavn', '$etternavn', '$epost', $kull, $liste, $svartegrense, '$aktiv', '$slettet', '$tlf')";
+			$result = pg_query_params("INSERT INTO personer (kallenavn, fornavn, etternavn, epost, kull, liste, svartegrense, aktiv, slettet, tlf) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)", array($kallenavn, $fornavn, $etternavn, $epost, $kull, $liste, $svartegrense, $aktiv, $slettet, $tlf));
 		}
-		if(!pg_query($query)) echo "<span style='color: red'>Ikke lagret - noe gikk galt: ".pg_last_error()."</span><br />";
+		//if(!pg_query($query)) echo "<span style='color: red'>Ikke lagret - noe gikk galt: ".pg_last_error()."</span><br />";
+		if(!$result) echo "<span style='color: red'>Ikke lagret - noe gikk galt: ".pg_last_error()."</span><br />";
 		else $lagret = true;
 	} else echo "<span style='color: red'>Ikke lagret: feil i input</span><br />";
 }
 if(is_numeric($bruker)) {
 	echo "<h3>Rediger bruker</h3>";
 	// Hent brukerdetaljer
-	$query = "SELECT * FROM personer WHERE id = $bruker";
-	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+//	$query = "SELECT * FROM personer WHERE id = $bruker";
+	$result = pg_query_params("SELECT * FROM personer WHERE id = $1", array($bruker)) or die('Noe gikk galt: '.pg_last_error());
+//	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	$row = pg_fetch_array($result);
 	
 	$kallenavn = $row['kallenavn'];

@@ -31,16 +31,16 @@ Listedato: <input name='dato' type='date' value="<? echo $dato?>" />
 <?
 if(is_numeric($liste)) {
 	echo "Valgt krysseliste: ".$lister[$liste];
-	if ($liste == -1) $query = "SELECT * FROM personer WHERE slettet = FALSE ORDER BY kallenavn";
-	else $query = "SELECT * FROM personer WHERE liste = $liste AND slettet = FALSE ORDER BY kallenavn";
-	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+	if ($liste == -1) $result = pg_query("SELECT * FROM personer WHERE slettet = FALSE ORDER BY kallenavn");
+	else $result = pg_query_params("SELECT * FROM personer WHERE liste = $1 AND slettet = FALSE ORDER BY kallenavn", array($liste));
+	if(!$result) die('Noe gikk galt: '.pg_last_error());
 
 	if($_POST['legginnliste']) {
 		$summer = array();
 		$navn = array();
-		if ($liste == -1) $query = "SELECT id, kallenavn FROM personer WHERE slettet = FALSE ORDER BY kallenavn";
-		else $query = "SELECT id, kallenavn FROM personer WHERE liste = $liste AND slettet = FALSE ORDER BY kallenavn";
-		$insert_result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+		if ($liste == -1) $insert_result = pg_query("SELECT id, kallenavn FROM personer WHERE slettet = FALSE ORDER BY kallenavn");
+		else $insert_result = pg_query_params("SELECT id, kallenavn FROM personer WHERE liste = $1 AND slettet = FALSE ORDER BY kallenavn", array($liste));
+		if (!$insert_result) die('Noe gikk galt: '.pg_last_error());
 		while($row = pg_fetch_array($insert_result)) {
 			$sum = $_POST['_'.$row['id'].'_tot'];
 			if($sum && is_numeric($sum) && ($sum != 0)) {

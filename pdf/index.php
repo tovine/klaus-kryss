@@ -52,8 +52,10 @@ $row = pg_fetch_array($result);
 $barsjef = $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];
 $tlf_barsjef = $row['tlf'];
 
-$query = "SELECT kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $liste ORDER BY kallenavn ASC";
-$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+//$query = "SELECT kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $liste ORDER BY kallenavn ASC";
+$query = "SELECT kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $1 ORDER BY kallenavn ASC";
+//$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+$result = pg_query_params($query, array($liste)) or die('Noe gikk galt: '.pg_last_error());
 
 // Bygg header
 if ($nopdf) {
@@ -129,7 +131,7 @@ if ($nopdf) {
 	$pdf->WriteHTML($style, 1);
 	$pdf->WriteHTML($body, 2, false);
 
-	$pdf->Output();
+	$pdf->Output(strtolower($lister[$liste]).'-siste.pdf','I');
 }
 
 ?>

@@ -11,21 +11,40 @@ $sort_parameter = str_replace("'", "''", $_REQUEST['sort']);
 // Bygg query
 $query = "SELECT * FROM varer";
 // Variabel for å holde orden på filter-kondisjoner
-$limits = 0;
+$limits = 1;
+$params = array();
 
 if ($sokeord != '') {
-	$query .= " WHERE navn ILIKE('%$sokeord%')";
+//	$query .= " WHERE navn ILIKE('%$sokeord%')";
+	$query .= " WHERE navn ILIKE($1)";
+	$params[] = "'%$sokeord%'";
 	$limits++;
 }
 if ($filter_kategori != '') {
-	// $limits > 0 -> TRUE, derfor funker dette
-	if ($limits) $query .= " AND ";
+	if ($limits > 1) $query .= " AND ";
 	else $query .= " WHERE ";
-	$query .= "kategori = '$filter_kategori'";
+//	$query .= "kategori = '$filter_kategori'";
+	$query .= "kategori = $$limits";
+	$params[] = $filter_kategori;
 }
-if ($sort_parameter != '') $query .= " ORDER BY $sort_parameter";
-
-$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+if ($sort_parameter != '') {
+//	$query .= " ORDER BY $sort_parameter";
+	switch($sort_parameter) {
+		case 'kategori':
+		case 'kategori desc':
+		case 'pris':
+		case 'pris desc':
+		case 'navn':
+		case 'navn desc':
+			$order = $sort_parameter;
+			break;
+		default:
+			$order = "navn";
+	}
+	$query .= " ORDER BY $order";
+}
+//$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
+$result = pg_query_params($query, $params) or die('Noe gikk galt: '.pg_last_error());
 ?>
 
 <style type="text/css">
