@@ -1,1 +1,1 @@
-/home/www/www_fk-test/klaus/vareliste.php
+vareliste.php
