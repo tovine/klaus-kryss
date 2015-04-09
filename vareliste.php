@@ -17,7 +17,7 @@ $params = array();
 if ($sokeord != '') {
 //	$query .= " WHERE navn ILIKE('%$sokeord%')";
 	$query .= " WHERE navn ILIKE($1)";
-	$params[] = "'%$sokeord%'";
+	$params[] = "%$sokeord%";
 	$limits++;
 }
 if ($filter_kategori != '') {
