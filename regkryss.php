@@ -38,11 +38,15 @@ if(is_numeric($liste)) {
 	if($_POST['legginnliste']) {
 		$summer = array();
 		$navn = array();
+		$data = json_decode($_POST['data'], true);
+//		var_dump($data);
+
 		if ($liste == -1) $insert_result = pg_query("SELECT id, kallenavn FROM personer WHERE slettet = FALSE ORDER BY kallenavn");
 		else $insert_result = pg_query_params("SELECT id, kallenavn FROM personer WHERE liste = $1 AND slettet = FALSE ORDER BY kallenavn", array($liste));
 		if (!$insert_result) die('Noe gikk galt: '.pg_last_error());
 		while($row = pg_fetch_array($insert_result)) {
-			$sum = $_POST['_'.$row['id'].'_tot'];
+		//	$sum = $_POST['_'.$row['id'].'_tot'];
+			$sum = $data['_'.$row['id'].'_tot'];
 			if($sum && is_numeric($sum) && ($sum != 0)) {
 				// Klargjør data for å legge inn i databasen
 				$summer[$row['id']] = -$sum;
@@ -85,12 +89,15 @@ function summer(id) {
 ?>
 }
 function cleanForm() {
+	var data = new Object();
 	for(var i=0; i < document.krysseliste.elements.length; i++) {
 		var el = document.krysseliste.elements[i];
-		if(el.type == "text" && /_[0-9]+_/gi.test(el.name) && !(/_tot/gi.test(el.name))) {
+		if(el.type == "text" && /_[0-9]+_/gi.test(el.name) /*&& !(/_tot/gi.test(el.name))*/) {
 			el.disabled = true;
+			if(/_tot/gi.test(el.name) && el.value.length > 0) data[el.name] = el.value;
 		}
 	}
+	document.krysseliste.elements.data.value = JSON.stringify(data);
 }
 </script>
 <table>
@@ -112,6 +119,7 @@ function cleanForm() {
 
 	echo "</table><br />
 	Kommentar til listen: <input type='text' name='kommentar' /><br /><br />
+	<input type='hidden' id='form_serialized' name='data' />
 	<input type='submit' name='legginnliste' value='Legg inn' /><input type='reset' value='Nullstill' />";
 } else {?>
 <?
