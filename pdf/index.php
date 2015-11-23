@@ -42,10 +42,9 @@ $liste = $_REQUEST['liste'];
 if(!is_numeric($liste)) die('Feil: liste ikke spesifisert (må angis som et tall)');
 
 // Hent info om barsjef
-$query = "SELECT * FROM verv WHERE verv = 'barsjef' ORDER BY dato DESC LIMIT 1";
+$query = "SELECT * FROM verv WHERE verv = 'barsjef' AND dato < NOW() ORDER BY dato DESC LIMIT 1";
 $result = pg_query($query) or die('Database-spørring mislyktes: '.pg_last_error());
 $barsjef_array = pg_fetch_array($result);
-$aar = explode('-',$barsjef['dato'])[0];
 $query = "SELECT * FROM personer WHERE id = ".$barsjef_array['person'];
 $result = pg_query($query);
 $row = pg_fetch_array($result);

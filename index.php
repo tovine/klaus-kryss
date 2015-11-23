@@ -3,7 +3,7 @@ include '../include/top.php';
 include '../include/dbsetup.php'; // Setter opp tilkobling mot postgresql-database, så man bare kan bruke pg_query() direkte.
 include 'klaus_inc.php';
 
-$query = "SELECT * FROM verv WHERE verv = 'barsjef' ORDER BY dato DESC LIMIT 1";
+$query = "SELECT * FROM verv WHERE verv = 'barsjef' AND dato < NOW() ORDER BY dato DESC LIMIT 1";
 $result = pg_query($query) or die('Database-spørring mislyktes: '.pg_last_error());
 $barsjef = pg_fetch_array($result);
 $aar = explode('-',$barsjef['dato'])[0];
