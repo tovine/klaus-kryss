@@ -130,6 +130,8 @@ $del = lagDel($allt);
 listeHor($all, $del); //100
 echo "";
 
+$alltime = pg_fetch_array(pg_query("select sum(belop), min(registrert) from klaus where belop < 0"));
+echo "<p>Totalt har det blitt registrert kryss for <b><i>kr. " . number_format(abs($alltime['sum']), 2, ',', ' ') . "</i></b> siden <i>" . substr($alltime['min'],0,10) . "</i></p>";
 
 include("../include/foot.php");
 ?>
