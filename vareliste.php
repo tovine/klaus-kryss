@@ -15,7 +15,6 @@ $limits = 1;
 $params = array();
 
 if ($sokeord != '') {
-//	$query .= " WHERE navn ILIKE('%$sokeord%')";
 	$query .= " WHERE navn ILIKE($1)";
 	$params[] = "%$sokeord%";
 	$limits++;
@@ -23,12 +22,11 @@ if ($sokeord != '') {
 if ($filter_kategori != '') {
 	if ($limits > 1) $query .= " AND ";
 	else $query .= " WHERE ";
-//	$query .= "kategori = '$filter_kategori'";
 	$query .= "kategori = $$limits";
 	$params[] = $filter_kategori;
 }
+$query .= " ORDER BY slettet";
 if ($sort_parameter != '') {
-//	$query .= " ORDER BY $sort_parameter";
 	switch($sort_parameter) {
 		case 'kategori':
 		case 'kategori desc':
@@ -41,7 +39,7 @@ if ($sort_parameter != '') {
 		default:
 			$order = "navn";
 	}
-	$query .= " ORDER BY $order";
+	$query .= ", $order";
 }
 //$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 $result = pg_query_params($query, $params) or die('Noe gikk galt: '.pg_last_error());
@@ -89,7 +87,6 @@ while ($row = pg_fetch_array($kategori_result)) {
 if (pg_num_rows($result)) {
 	if ($sokeord) $filter_args .= "&sokeord=$sokeord";
 	if ($filter_kategori) $filter_args .= "&filter_kategori=$filter_kategori"; 
-	// TODO: mulighet for å sortere andre veien
 	echo "<table><tr><th><a href='vareliste.php?sort=navn";
 	if ($sort_parameter == 'navn') echo "%20desc";
 	echo "$filter_args'>Navn</a></th><th><a href='vareliste.php?sort=kategori";

@@ -51,9 +51,7 @@ $row = pg_fetch_array($result);
 $barsjef = $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];
 $tlf_barsjef = $row['tlf'];
 
-//$query = "SELECT kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $liste ORDER BY kallenavn ASC";
 $query = "SELECT kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $1 ORDER BY kallenavn ASC";
-//$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 $result = pg_query_params($query, array($liste)) or die('Noe gikk galt: '.pg_last_error());
 
 // Bygg header
@@ -73,10 +71,7 @@ Kontonummer: $klaus_kontonr
 </td></tr></table>";
 }
 
-//$col_hdrs = array('Navn' => '1%','Pils' => '40%','Brus' => '10%','50' => '10%','20' => '16%','10' => '7%','5' => '7%','1' => '7%');
-
 $body = "<table class='krysseliste'><thead><tr>";
-//$body = "<table class='krysseliste'><thead><td colspan='".sizeof($col_hdrs)."'>$header</td><tr>";
 
 $body .= "<th style='width: 10;'>&nbsp;Navn</th>";
 foreach ($col_hdrs as $hdr => $width) {
@@ -95,10 +90,8 @@ while ($row = pg_fetch_array($result)) {
 
 	if ($sum < $denne_sin_grense)
 		$body .= "<tr class='svart'>";
-	//	$farge = 0;
 	else
 		$body .= "<tr class='hvit'>";
-	//	$farge = 1;
 	$body .= "<td style='background: white'>&nbsp;$nick</td>";
 	for ($i = 0;$i < sizeof($col_hdrs);$i++) $body .= "<td></td>";
 
