@@ -78,7 +78,9 @@ if(is_numeric($liste)) {
 	}
 ?>
 <script type="text/javascript">
+var inputAdded = false;
 function summer(id) {
+	inputAdded = true; // Brukes for å advare
 <?
 	echo "eval(	'document.krysseliste._' + id + '_tot.value = '";
 	foreach ($col_pris as $felt => $verdi) {
@@ -98,6 +100,13 @@ function cleanForm() {
 		}
 	}
 	document.krysseliste.elements.data.value = JSON.stringify(data);
+}
+window.onbeforeunload = function(e) {
+	if (inputAdded == false)
+		return false;
+	var dialogText = 'Er du sikker på at du vil avbryte krysselisteregistreringen?';
+	e.returnValue = dialogText;
+	return dialogText;
 }
 </script>
 <table>

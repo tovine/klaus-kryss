@@ -46,8 +46,8 @@ background-color:white;
 
 <h3>Vis/skriv ut krysseliste</h3>
 <a href='index.php'>Tilbake</a><br />
-<form name='krysseliste' action='liste.php' method='post'>
-Velg liste: <select name='liste'>
+<form name='krysseliste' action='liste.php' method='get'>
+Velg liste: <select name='liste' onChange='submit()'>
 <?
 foreach ($lister as $liste_index => $liste_navn) {
 	echo "<option value='$liste_index' ";
@@ -57,8 +57,9 @@ foreach ($lister as $liste_index => $liste_navn) {
 ?>
 	<option value='-1' <?if($liste == -1) echo "selected";?>>Alle</option>
 </select>
+<noscript>
 <input name='velgliste' type='submit' value='Velg' />
-
+</noscript>
 <?
 $total_saldo = 0;
 

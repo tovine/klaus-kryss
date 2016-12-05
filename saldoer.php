@@ -32,9 +32,9 @@ white-space: nowrap;
 
 <h3>Vis/oppdater saldoer</h3>
 <a href='index.php'>Tilbake</a><br />
-<form name='krysseliste' action='saldoer.php' method='post'>
-Velg liste: <select name='liste'>
-<?
+<form name='velg_liste_og_person' action='saldoer.php' method='get'>
+Velg liste: <select name='liste' onChange='submit()'>
+<?php
 foreach ($lister as $liste_index => $liste_navn) {
 	echo "<option value='$liste_index' ";
 	if ($liste_index == $liste) echo "selected";
@@ -42,9 +42,11 @@ foreach ($lister as $liste_index => $liste_navn) {
 }
 ?>
 </select>
+<noscript>
 <input name='velgliste' type='submit' value='Velg' />
+</noscript>
 
-<?
+<?php
 echo "Valgt krysseliste: ".$lister[$liste];
 
 // Husk hvilken bruker vi jobber med...
@@ -67,13 +69,19 @@ if(is_numeric($bruker)) {
 $result = pg_query_params("SELECT * FROM personer WHERE liste = $1 AND slettet = FALSE ORDER BY kallenavn", array($liste));
 //$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 if(!$result) die('Noe gikk galt: '.pg_last_error());
-echo "<table><tr><td valign='top'><select name='bruker' size='30'>";
+echo "<table><tr><td valign='top'><select name='bruker' size='30' onChange='submit()'>";
 
 while ($row = pg_fetch_array($result)) {
 	echo "<option value='".$row['id']."'>".$row['kallenavn']."</option>";
 }
 echo "</select><br />
-<input type='submit' name='velgbruker' value='Velg' /></td><td valign='top'>";
+<noscript>
+<input type='submit' name='velgbruker' value='Velg' />
+</noscript>
+</form>
+<form name='krysseliste' method='post' action='?liste=$liste&bruker=$bruker'>
+</td><td valign='top'>";
+
 if(is_numeric($bruker)) {
 echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 	if($_POST['nysvartegrense']) {
@@ -126,10 +134,10 @@ echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 
 <table>
 <tr><th>Navn:</th><th>Epost:</th><th>Telefon:</th><th>Svartegrense:</th></tr>
-<tr><td class='infocol'><? echo $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];?></td><td class='infocol'><?=$row['epost']?></td><td class='infocol'><?=$row['tlf']?></td><td class='infocol'><input type='text' name='svartegrense' size='4' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /><input type='submit' name='nysvartegrense' value='Slett' /></td></tr>
+<tr><td class='infocol'><?php echo $row['fornavn']." \"".$row['kallenavn']."\" ".$row['etternavn'];?></td><td class='infocol'><?=$row['epost']?></td><td class='infocol'><?=$row['tlf']?></td><td class='infocol'><input type='text' name='svartegrense' size='4' value='<?=$svartegrense?>' /><input type='submit' name='nysvartegrense' value='OK' /><input type='submit' name='nysvartegrense' value='Slett' /></td></tr>
 <tr><th colspan='3'>Flytt til liste:
 <select name='nyliste'>
-<?
+<?php
 foreach ($lister as $liste_index => $liste_navn) {
 	echo "<option value='$liste_index' ";
 //	if ($liste_index == $liste) echo "selected";
@@ -140,7 +148,7 @@ foreach ($lister as $liste_index => $liste_navn) {
 </th></tr>
 <tr><th colspan='5'>Sum: <input type='text' name='regbelop' size='4' placeholder='Beløp' /> Type:<select name='type'>
 <!--<tr><th>Sum: <input type='text' name='regbelop' size='4' placeholder='Beløp' /></th><th colspan='2'>Type:<select name='type'>-->
-<?
+<?php
 foreach ($listetype as $listetype_index => $listetype_navn) {
 	echo "<option value='$listetype_index'>$listetype_navn</option>";
 }
@@ -152,7 +160,7 @@ foreach ($listetype as $listetype_index => $listetype_navn) {
 <tr><th>Saldo:</th><td><?=$saldo?></td></tr>
 <tr><th width='45'>Beløp</th><th width='60'>Type</th><th>Kommentar</th><th width='80'>Dato</th><th width='130'>Registrert</th></tr>
 
-<?
+<?php
 //	$query = "SELECT * FROM klaus WHERE bruker = $bruker ORDER BY id DESC";
 	$result = pg_query_params("SELECT * FROM klaus WHERE bruker = $1 ORDER BY id DESC", array($bruker));
 //	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
