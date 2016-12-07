@@ -33,8 +33,21 @@ white-space: nowrap;
 <h3>Vis/oppdater saldoer</h3>
 <a href='index.php'>Tilbake</a><br />
 <form name='velg_liste_og_person' action='saldoer.php' method='get'>
-Velg liste: <select name='liste' onChange='submit()'>
 <?php
+// Husk hvilken bruker vi jobber med...
+if(is_numeric($bruker)) {
+	echo "<input type='hidden' name='bruker' value='$bruker' />";
+	if($_POST['flyttbruker'] == "Flytt") {
+		// Flytt bruker til ny liste
+		$nyliste = $_POST['nyliste'];
+		if(is_numeric($nyliste)) {
+			$result = pg_query_params("UPDATE personer SET liste = $1 WHERE id = $2", array($nyliste, $bruker));
+			if($result) $liste = $nyliste;
+			else echo "Noe gikk galt: ".pg_last_error();
+		}
+	}
+}
+echo "Velg liste: <select name='liste' onChange='submit()'>";
 foreach ($lister as $liste_index => $liste_navn) {
 	echo "<option value='$liste_index' ";
 	if ($liste_index == $liste) echo "selected";
@@ -49,25 +62,7 @@ foreach ($lister as $liste_index => $liste_navn) {
 <?php
 echo "Valgt krysseliste: ".$lister[$liste];
 
-// Husk hvilken bruker vi jobber med...
-if(is_numeric($bruker)) {
-
-	echo "<input type='hidden' name='bruker' value='$bruker' />";
-	if($_POST['flyttbruker'] == "Flytt") {
-		// Flytt bruker til ny liste
-		$nyliste = $_POST['nyliste'];
-		if(is_numeric($nyliste)) {
-//			$query = "UPDATE personer SET liste = $nyliste WHERE id = $bruker";
-			$result = pg_query_params("UPDATE personer SET liste = $1 WHERE id = $2", array($nyliste, $bruker));
-//			if(pg_query($query)) $liste = $nyliste;
-			if($result) $liste = $nyliste;
-			else echo "Noe gikk galt: ".pg_last_error();
-		}
-	}
-}
-//$query = "SELECT * FROM personer WHERE liste = $liste AND slettet = FALSE ORDER BY kallenavn";
 $result = pg_query_params("SELECT * FROM personer WHERE liste = $1 AND slettet = FALSE ORDER BY kallenavn", array($liste));
-//$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 if(!$result) die('Noe gikk galt: '.pg_last_error());
 echo "<table><tr><td valign='top'><select name='bruker' size='30' onChange='submit()'>";
 
@@ -90,9 +85,7 @@ echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 		if($_POST['nysvartegrense'] == "Slett") $svartegrense = 0;
 		if(!is_numeric($svartegrense)) echo "Svartegrense må bestå av tall...";
 		else {
-//			$query = "UPDATE personer SET svartegrense = $svartegrense WHERE id = $bruker";
 			$result = pg_query_params("UPDATE personer SET svartegrense = $1 WHERE id = $2", array($svartegrense, $bruker));
-//			pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 			if(!$result) die('Noe gikk galt: '.pg_last_error());
 			echo "<p>Ny svartegrense ble satt</p>";
 		}
@@ -106,28 +99,22 @@ echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 			$kommentar = str_replace("'","''", $_POST['kommentar']); // Escape strings for å beskytte mot SQL-injection
 			$dato = str_replace("'","''", $_POST['dato']);
 			// Når all input har blitt hentet og kontrollert - sett inn info i database...
-//			$query = "INSERT INTO klaus VALUES(DEFAULT, $bruker, $type, $belop, '$kommentar', '$dato', DEFAULT)";
 			$result = pg_query_params("INSERT INTO klaus VALUES(DEFAULT, $1, $2, $3, $4, $5, DEFAULT)", array($bruker, $type, $belop, $kommentar, $dato));
-//			pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 			if(!$result) die('Noe gikk galt: '.pg_last_error());
 		} else {
-			// TODO: varsle bruker med alertbox i stedet?
+			// TODO: varsle bruker med alertbox før innsending i stedet?
 			echo "Feil: beløp må angis med tall, og kan ikke være tomt eller 0 (litt poengløst å registrere 0kr - ikke sant?)";
 		}
 	}
 	
 	// Hent brukerdetaljer
-//	$query = "SELECT kallenavn, fornavn, etternavn, epost, svartegrense, tlf  FROM personer WHERE id = $bruker";
 	$result = pg_query_params("SELECT kallenavn, fornavn, etternavn, epost, svartegrense, tlf  FROM personer WHERE id = $1", array($bruker));
-//	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	if(!$result) die('Noe gikk galt: '.pg_last_error());
 	$row = pg_fetch_array($result);
 	$svartegrense = $row['svartegrense'];
 	if ($svartegrense == 0 || !isset($svartegrense)) $svartegrense = $svartegrenser[$liste];
 
-//	$query = "SELECT SUM(belop) AS saldo FROM klaus WHERE bruker = $bruker";
 	$result = pg_query_params("SELECT SUM(belop) AS saldo FROM klaus WHERE bruker = $1", array($bruker));
-//	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	if(!$result) die('Noe gikk galt: '.pg_last_error());
 	$saldo = pg_fetch_array($result)['saldo'];
 ?>
@@ -140,7 +127,6 @@ echo "<a href='bruker.php?bruker=$bruker'><b>(Rediger bruker)</b></a>";
 <?php
 foreach ($lister as $liste_index => $liste_navn) {
 	echo "<option value='$liste_index' ";
-//	if ($liste_index == $liste) echo "selected";
 	echo ">$liste_navn</option>";
 }
 ?>
@@ -161,9 +147,7 @@ foreach ($listetype as $listetype_index => $listetype_navn) {
 <tr><th width='45'>Beløp</th><th width='60'>Type</th><th>Kommentar</th><th width='80'>Dato</th><th width='130'>Registrert</th></tr>
 
 <?php
-//	$query = "SELECT * FROM klaus WHERE bruker = $bruker ORDER BY id DESC";
 	$result = pg_query_params("SELECT * FROM klaus WHERE bruker = $1 ORDER BY id DESC", array($bruker));
-//	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	if(!$result) die('Noe gikk galt: '.pg_last_error());
 	while($row = pg_fetch_array($result)) {
 		echo "<tr><td class='".$listetype[$row['type']]."'>".$row['belop']."</td><td class='".$listetype[$row['type']]."'>".$listetype[$row['type']]."</td><td>".$row['kommentar']."</td><td>".$row['dato']."</td><td>".$row['registrert']."</td></tr>";
