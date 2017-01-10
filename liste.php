@@ -10,15 +10,13 @@ if(!is_numeric($liste)) $liste = 0;
 function print_list($liste, $link) {
 	global $svartegrenser, $total_saldo, $listenavn;
 	if(!is_numeric($liste)) die('NEI! Listenummer må være numerisk, ikke prøv å injisere dritt...');
-//	$query = "SELECT id, kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $liste ORDER BY kallenavn ASC";
 	$query = "SELECT id, kallenavn, saldo, svartegrense FROM klaus_saldoer WHERE liste = $1 ORDER BY kallenavn ASC";
-//	$result = pg_query($query) or die('Noe gikk galt: '.pg_last_error());
 	$result = pg_query_params($query, array($liste)) or die('Noe gikk galt: '.pg_last_error());
 	if (!$link) {
 		if (!pg_num_rows($result)) return;
 		echo "<h4>Saldoliste: $listenavn</h4>";
 	}
-	echo "<table><tr><th>Kallenavn</th><th>Saldo</th><th>Status</th></tr>";
+	echo "<table><tr><th style='text-align: left'>Kallenavn</th><th>Saldo</th><th>Status</th></tr>";
 
 	while($row = pg_fetch_array($result)) {
 		if($row['svartegrense'] != 0) $svartegrense = $row['svartegrense'];
@@ -27,7 +25,7 @@ function print_list($liste, $link) {
 		if($row['saldo'] >= $svartegrense) $status = "hvit";
 		else $status = "svart";
 		if($link) echo "<tr><td><a href='saldoer.php?liste=$liste&bruker=".$row['id']."'>".$row['kallenavn']."</a></td><td>".$row['saldo']."</td><td class='$status'>$status</td></tr>";
-		else echo "<tr><td>".$row['kallenavn']."</td><td>".$row['saldo']."</td><td class='$status'>$status</td></tr>";
+		else echo "<tr><td>".$row['kallenavn']."</td><td style='text-align: right; ".($row['saldo'] < 0 ? 'color: red' : '')."'>".$row['saldo']."</td><td class='$status'>$status</td></tr>";
 		$total_saldo += $row['saldo'];
 	}
 	echo "</table>";
@@ -48,7 +46,7 @@ background-color:white;
 <a href='index.php'>Tilbake</a><br />
 <form name='krysseliste' action='liste.php' method='get'>
 Velg liste: <select name='liste' onChange='submit()'>
-<?
+<?php
 foreach ($lister as $liste_index => $liste_navn) {
 	echo "<option value='$liste_index' ";
 	if ($liste_index == $liste) echo "selected";
@@ -60,7 +58,7 @@ foreach ($lister as $liste_index => $liste_navn) {
 <noscript>
 <input name='velgliste' type='submit' value='Velg' />
 </noscript>
-<?
+<?php
 $total_saldo = 0;
 
 if($liste == -1) { // Skriv ut alle listene
